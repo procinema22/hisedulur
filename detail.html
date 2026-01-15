@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SEDULUR FOTO COPY</title>
+  <link rel="stylesheet" href="css/detail.css">
+   
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <header>
+    <div class="logo">
+        <img src="img/LOGGO/SDLR.png" alt="ISA GRAFIKA Logo">
+      </div>
+      
+    <nav>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="cetakfoto.html">Cetak Foto</a></li>
+        <li><a href="cetakinvoice.html">Invoice</a></li>
+        <li><a href="#">About Us</a></li>
+      </ul>
+    </nav>
+    <div class="search-box">
+      <input type="text" placeholder="Cari Produk Disini">
+      <button>🔍</button>
+    </div>
+  </header>
+ <!-- DETAIL PRODUK -->
+<h1 id="productName" class="product-title"></h1>
+
+<div class="detail-container">
+  
+  <!-- KIRI: GAMBAR -->
+  <div class="detail-image">
+    <img id="productImage" alt="">
+  </div>
+
+  <!-- KANAN: DESKRIPSI -->
+  <div class="detail-info">
+    <p id="productDesc"></p>
+
+    <table id="priceTable"></table>
+
+    <select id="laminasiSelect"></select>
+    <select id="finishingSelect"></select>
+  </div>
+
+</div>
+
+<script src="js/detail.js"></script>
+</body>
+</html>

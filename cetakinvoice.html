@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SEDULUR FOTO COPY</title>
+
+<link rel="stylesheet" href="css/invoce.css">
+
+<style>
+.del{cursor:pointer;color:red}
+.diskon-info{margin-top:6px;font-weight:600}
+.total{margin-top:10px;font-weight:600}
+.grand-total{margin-top:4px;font-weight:800;font-size:18px}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="logo">
+    <img src="img/loggo/sdlr.png" alt="SEDULUR">
+  </div>
+  <nav>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="cetakfoto.html">Cetak Foto</a></li>
+      <li><a href="cetakinvoice.html">Invoice</a></li>
+    </ul>
+  </nav>
+</header>
+
+<div class="container" id="notaArea">
+<span class="watermark">Sedulur Fotocopy</span>
+
+<!-- HEADER -->
+<div class="header">
+  <img src="img/loggo/logo1.png" class="logo">
+  <div class="info">
+    <small>Tanggal: <span id="tgl"></span></small>
+    <small>No Nota: <span id="noNota"></span></small>
+  </div>
+</div>
+
+<!-- INPUT -->
+<div class="select-area no-print">
+  <select id="layanan">
+    <option data-type="hp" data-bulat="true">Print Hitam Putih</option>
+    <option data-type="warna">Print Warna</option>
+    <option data-type="warnastandar">Print Standar</option>
+    <option data-type="fullcolor">Full Color</option>
+    <option value="500">Hitam Putih Bolak-Balik</option>
+    <option value="4000">Full A4 HVS</option>
+    <option value="8000">A3 Buffalo</option>
+    <option value="10000">A3 Glossy</option>
+    <option value="40000">HardCover</option>
+    <option value="4000">Jilid Mika</option>
+    <option value="15000">Softcover</option>
+    <option value="18000">Softcover Sambung</option>
+  </select>
+
+  <input type="number" id="lembar" min="1" value="1">
+  <input type="number" id="qty" min="1" value="1">
+  <button onclick="tambah()">Tambah</button>
+</div>
+
+<!-- TABLE -->
+<table>
+<thead>
+<tr>
+  <th>Deskripsi</th>
+  <th class="print-only">Harga</th>
+  <th>Lembar</th>
+  <th>Qty</th>
+  <th class="print-only">Subtotal</th>
+  <th class="no-print">Aksi</th>
+</tr>
+</thead>
+<tbody id="list"></tbody>
+</table>
+
+<!-- TOTAL -->
+<div class="total">Total: Rp <span id="totalView">0</span></div>
+<div class="grand-total">Grand Total: Rp <span id="grandTotalView">0</span></div>
+
+<!-- DISKON -->
+<div class="no-print" style="margin-top:10px">
+  <label>
+    <input type="checkbox" id="adminDiskon" onchange="toggleAdminPin()">
+    Diskon Admin 7% (PIN)
+  </label>
+
+  <div id="pinBox" style="display:none;margin-top:5px">
+    <input type="password" id="pinInput" placeholder="PIN Admin">
+    <button onclick="cekPin()">OK</button>
+  </div>
+
+  <div style="margin-top:5px">
+    <label>
+      <input type="checkbox" id="showDiskonKet" onchange="toggleDiskonKet()">
+      Tampilkan keterangan diskon
+    </label>
+  </div>
+</div>
+
+<div class="diskon-info" id="diskonKet" style="display:none"></div>
+
+<!-- BUTTON -->
+<div class="no-print" style="margin-top:15px;display:flex;gap:10px;flex-wrap:wrap">
+  <button onclick="window.print()">Print</button>
+  <button onclick="downloadPDF()">PDF</button>
+  <button onclick="sendWA()">WhatsApp</button>
+  <button onclick="resetNota()">Reset</button>
+</div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+<script>
+/* ================= INIT ================= */
+const ADMIN_PIN = "7373";
+let adminValid = false;
+let totalAkhir = 0;
+
+noNota.innerText = "INV-" + Math.floor(Math.random()*999999);
+const d = new Date();
+tgl.innerText = `${d.getDate()}-${d.getMonth()+1}-${d.getFullYear()}`;
+
+/* ================= PRICING ================= */
+function bulatkanHP(n){
+  let s = n % 1000;
+  return s === 0 ? n : (s < 500 ? n - s + 500 : n - s + 1000);
+}
+function hargaHitamPutih(q){ return q >= 200 ? 250 : 300; }
+function hargaWarna(q){ return q >= 300 ? 400 : q >= 100 ? 450 : 500; }
+function hargaWarnaStandar(q){ return q >= 150 ? 500 : q >= 50 ? 750 : 2000; }
+function hargaFullColor(q){ return q >= 150 ? 1500 : q >= 50 ? 1800 : 2000; }
+
+/* ================= TAMBAH ================= */
+function tambah(){
+  const opt = layanan.options[layanan.selectedIndex];
+  const lembar = parseInt(lembarInput.value)||1;
+  const qty = parseInt(qtyInput.value)||1;
+  const type = opt.dataset.type || "flat";
+  const bulat = opt.dataset.bulat === "true";
+
+  let harga =
+    type==="hp" ? hargaHitamPutih(lembar) :
+    type==="warna" ? hargaWarna(lembar) :
+    type==="warnastandar" ? hargaWarnaStandar(lembar) :
+    type==="fullcolor" ? hargaFullColor(lembar) :
+    parseInt(opt.value);
+
+  const tr = document.createElement("tr");
+  tr.dataset.type = type;
+  tr.dataset.bulat = bulat ? "1":"0";
+
+  tr.innerHTML = `
+    <td>${opt.text}</td>
+    <td class="print-only harga">${harga.toLocaleString()}</td>
+    <td><input type="number" value="${lembar}" min="1" onchange="updateRow(this)"></td>
+    <td><input type="number" value="${qty}" min="1" onchange="updateRow(this)"></td>
+    <td class="print-only sb">0</td>
+    <td class="no-print"><span class="del" onclick="hapus(this)">Hapus</span></td>
+  `;
+  list.appendChild(tr);
+  hitungRow(tr);
+  hitungTotal();
+}
+
+/* ================= HITUNG ================= */
+function hitungRow(tr){
+  const i = tr.querySelectorAll("input");
+  const lembar = parseInt(i[0].value)||1;
+  const qty = parseInt(i[1].value)||1;
+  const type = tr.dataset.type;
+
+  let harga =
+    type==="hp" ? hargaHitamPutih(lembar) :
+    type==="warna" ? hargaWarna(lembar) :
+    type==="warnastandar" ? hargaWarnaStandar(lembar) :
+    type==="fullcolor" ? hargaFullColor(lembar) : 0;
+
+  let sub = harga * lembar * qty;
+  if(tr.dataset.bulat==="1") sub = bulatkanHP(sub);
+
+  tr.querySelector(".harga").innerText = harga.toLocaleString();
+  tr.querySelector(".sb").innerText = sub.toLocaleString();
+  tr.dataset.subtotal = sub;
+}
+
+function updateRow(el){
+  hitungRow(el.closest("tr"));
+  hitungTotal();
+}
+
+/* ================= TOTAL ================= */
+function hitungTotal(){
+  totalAkhir = 0;
+  document.querySelectorAll("#list tr").forEach(tr=>{
+    totalAkhir += parseInt(tr.dataset.subtotal||0);
+  });
+
+  totalView.innerText = totalAkhir.toLocaleString();
+
+  let diskon = 0;
+  let ket = "";
+
+  if(adminValid){
+    if(totalAkhir >= 200000){
+      diskon = Math.round(totalAkhir * 0.07);
+      ket = `Diskon Admin 7%: -Rp ${diskon.toLocaleString()}`;
+    }else{
+      ket = "Diskon Admin tidak berlaku (min Rp 200.000)";
+    }
+  }
+
+  diskonKet.innerText = ket;
+  grandTotalView.innerText = (totalAkhir - diskon).toLocaleString();
+}
+
+/* ================= DISKON ================= */
+function toggleDiskonKet(){
+  diskonKet.style.display = showDiskonKet.checked ? "block" : "none";
+}
+function toggleAdminPin(){
+  pinBox.style.display = adminDiskon.checked ? "block":"none";
+  if(!adminDiskon.checked){
+    adminValid=false;
+    pinInput.value="";
+    hitungTotal();
+  }
+}
+function cekPin(){
+  adminValid = pinInput.value === ADMIN_PIN;
+  alert(adminValid ? "PIN BENAR" : "PIN SALAH");
+  hitungTotal();
+}
+
+/* ================= UTIL ================= */
+function hapus(el){ el.closest("tr").remove(); hitungTotal(); }
+function resetNota(){
+  if(confirm("Reset nota?")){
+    list.innerHTML="";
+    adminValid=false;
+    adminDiskon.checked=false;
+    showDiskonKet.checked=false;
+    pinInput.value="";
+    pinBox.style.display="none";
+    diskonKet.style.display="none";
+    totalView.innerText="0";
+    grandTotalView.innerText="0";
+  }
+}
+function downloadPDF(){ html2pdf().from(notaArea).save(); }
+function sendWA(){
+  window.open(`https://wa.me/6288980484642?text=${encodeURIComponent(
+    "Nota Sedulur Fotocopy\nGrand Total: Rp "+grandTotalView.innerText
+  )}`);
+}
+
+/* ================= ALIAS ================= */
+const layanan = document.getElementById("layanan");
+const lembarInput = document.getElementById("lembar");
+const qtyInput = document.getElementById("qty");
+const list = document.getElementById("list");
+const totalView = document.getElementById("totalView");
+const notaArea = document.getElementById("notaArea");
+</script>
+
+</body>
+</html>

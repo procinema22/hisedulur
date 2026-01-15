@@ -1,0 +1,270 @@
+/* ============ ROOT & GLOBAL ============ */
+:root {
+    --bg: #0f172a;
+    --card: #1e293b;
+    --border: #334155;
+    --text: #e2e8f0;
+    --muted: #94a3b8;
+    --blue: #3b82f6;
+    --green: #ff1e00;
+    --purple: #8b5cf6;
+    --red: #ef4444;
+    --shadow: rgba(0,0,0,.4);
+  }
+  
+  *{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:"Poppins",sans-serif;
+  }
+  
+  body{
+    background:var(--bg);
+    color:var(--text);
+    overflow-x:hidden;
+  }
+  
+  /* ============ HEADER / NAVBAR ============ */
+  header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:14px 24px;
+    background:#020617;
+    border-bottom:1px solid var(--border);
+  }
+  
+  header .logo img{
+    height:42px;
+  }
+  
+  header nav ul{
+    display:flex;
+    gap:22px;
+    list-style:none;
+  }
+  
+  header nav ul li a{
+    color:var(--text);
+    text-decoration:none;
+    font-size:14px;
+    font-weight:500;
+  }
+  
+  header nav ul li a:hover{
+    color:var(--green);
+  }
+  
+  .search-box{
+    display:flex;
+    gap:6px;
+  }
+  
+  .search-box input{
+    padding:6px 10px;
+    border-radius:8px;
+    background:#020617;
+    border:1px solid var(--border);
+    color:white;
+  }
+  
+  /* ============ LAYOUT ============ */
+  .layout{
+    display:grid;
+    grid-template-columns:320px 1fr 260px;
+    height:calc(100vh - 70px);
+  }
+  
+  /* ============ LEFT PANEL ============ */
+  .left-panel{
+    background:var(--card);
+    padding:20px;
+    border-right:1px solid var(--border);
+    overflow-y:auto;
+  }
+  
+  .left-panel label{
+    font-size:13px;
+    color:var(--muted);
+    margin-bottom:4px;
+    display:block;
+  }
+  
+  .left-panel input,
+  .left-panel select{
+    width:100%;
+    padding:9px;
+    border-radius:8px;
+    border:1px solid var(--border);
+    background:#020617;
+    color:white;
+    margin-bottom:12px;
+  }
+  
+  .section-title{
+    font-size:18px;
+    font-weight:600;
+    margin-bottom:14px;
+  }
+  
+  /* DROP AREA */
+  .drop-area{
+    border:2px dashed var(--blue);
+    padding:24px;
+    text-align:center;
+    border-radius:10px;
+    color:var(--blue);
+    background:rgba(59,130,246,.05);
+    cursor:pointer;
+    margin-bottom:15px;
+  }
+  
+  .drop-area:hover{
+    background:rgba(59,130,246,.15);
+  }
+  
+  /* PRICE */
+  .price{
+    font-size:16px;
+    font-weight:600;
+    margin-top:6px;
+  }
+  
+  /* ============ CENTER PANEL ============ */
+  .center-panel{
+    padding:20px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    overflow-y:auto;
+  }
+  
+  canvas{
+    width:100%;
+    max-width:600px;
+    background:white;
+    border-radius:10px;
+    border:2px solid var(--border);
+    box-shadow:0 0 15px var(--shadow);
+  }
+  
+  /* PAGE NAV */
+  .page-nav{
+    display:flex;
+    gap:14px;
+    margin-top:12px;
+  }
+  
+  .page-nav button{
+    padding:8px 14px;
+    border:none;
+    border-radius:8px;
+    background:var(--blue);
+    color:white;
+    cursor:pointer;
+  }
+  
+  /* ============ RIGHT PANEL ============ */
+  .right-panel{
+    background:var(--card);
+    padding:20px;
+    border-left:1px solid var(--border);
+    overflow-y:auto;
+  }
+  
+  .btn{
+    width:100%;
+    padding:12px;
+    border:none;
+    border-radius:10px;
+    font-weight:600;
+    cursor:pointer;
+    margin-bottom:10px;
+    color:white;
+  }
+  
+  .blue{background:var(--blue)}
+  .green{background:var(--green)}
+  .purple{background:var(--purple)}
+  .red{background:var(--red)}
+  
+  /* ============ LOADER & TOAST ============ */
+  #loadingOverlay{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.7);
+    display:none;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    z-index:9999;
+  }
+  
+  .loader{
+    width:60px;
+    height:60px;
+    border-radius:50%;
+    border:6px solid #fff;
+    border-top:6px solid var(--blue);
+    animation:spin 1s linear infinite;
+  }
+  
+  @keyframes spin{
+    to{transform:rotate(360deg)}
+  }
+  
+  #toast{
+    position:fixed;
+    bottom:20px;
+    right:20px;
+    padding:12px 18px;
+    background:var(--card);
+    border-left:5px solid var(--blue);
+    border-radius:10px;
+    opacity:0;
+    transition:.3s;
+    z-index:10000;
+  }
+  
+  #toast.show{
+    opacity:1;
+    transform:translateY(-6px);
+  }
+  
+  /* ============ PRINT A4 MODE ============ */
+  @media print{
+    header,
+    .left-panel,
+    .right-panel,
+    .page-nav,
+    #toast,
+    #loadingOverlay{
+      display:none !important;
+    }
+  
+    body{
+      background:white;
+      overflow:visible;
+    }
+  
+    .layout{
+      display:block;
+      height:auto;
+    }
+  
+    canvas{
+      width:210mm !important;
+      height:297mm !important;
+      max-width:none;
+      border:none;
+      box-shadow:none;
+      border-radius:0;
+    }
+  }
+  
+  @page{
+    size:A4;
+    margin:10mm;
+  }
+  

@@ -1,0 +1,160 @@
+/* =========================
+   GLOBAL
+========================= */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+  }
+  
+  body {
+    background: #fafafa;
+    color: #222;
+  }
+  
+  /* =========================
+     NAVBAR
+  ========================= */
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 40px;
+    box-shadow: 0 3px 15px rgba(0,0,0,.08);
+  }
+  
+  .logo img {
+    height: 42px;
+  }
+  
+  nav ul {
+    list-style: none;
+    display: flex;
+    gap: 28px;
+  }
+  
+  nav ul li a {
+    text-decoration: none;
+    color: #222;
+    font-weight: 500;
+    transition: color .2s;
+  }
+  
+  nav ul li a:hover {
+    color: #d80000;
+  }
+  
+  /* Search */
+  .search-box {
+    display: flex;
+    align-items: center;
+    background: #f2f2f2;
+    border-radius: 30px;
+    overflow: hidden;
+  }
+  
+  .search-box input {
+    border: none;
+    padding: 8px 14px;
+    outline: none;
+    background: transparent;
+  }
+  
+  .search-box button {
+    border: none;
+    background: #d80000;
+    color: #fff;
+    padding: 8px 14px;
+    cursor: pointer;
+  }
+  
+  /* =========================
+     DETAIL PRODUK
+  ========================= */
+  
+  /* =========================
+   DETAIL LAYOUT
+========================= */
+
+.product-title {
+    max-width: 1200px;
+    margin: 30px auto 20px;
+    padding: 0 20px;
+    font-size: 28px;
+    font-weight: 700;
+  }
+  
+  .detail-container {
+    max-width: 1200px;
+    margin: auto;
+    padding: 0 20px 40px;
+    display: flex;
+    gap: 40px;
+    align-items: flex-start;
+  }
+  
+  /* KIRI */
+  .detail-image {
+    flex: 1;
+  }
+  
+  .detail-image img {
+    width: 100%;
+    border-radius: 14px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+  }
+  
+  /* KANAN */
+  .detail-info {
+    flex: 1;
+  }
+  
+  .detail-info p {
+    color: #555;
+    line-height: 1.7;
+    margin-bottom: 20px;
+  }
+  
+  /* TABLE */
+  #priceTable {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+  }
+  
+  #priceTable th {
+    background: #d80000;
+    color: white;
+    padding: 12px;
+  }
+  
+  #priceTable td {
+    padding: 12px;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  /* SELECT */
+  #laminasiSelect,
+  #finishingSelect {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 12px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+  }
+  
+  /* =========================
+     RESPONSIVE (HP)
+  ========================= */
+  @media (max-width: 768px) {
+    .detail-container {
+      flex-direction: column;
+    }
+  }
+  
+  
