@@ -1,228 +1,214 @@
-/* RESET */
+/* ================= RESET ================= */
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: "Poppins", Arial, sans-serif;
-  }
-  
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+  background: #f4f4f4;
+  color: #222;
+  padding: 20px;
+}
+
+/* ================= NAVBAR ================= */
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #111;
+  padding: 12px 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+header .logo img {
+  height: 40px;
+}
+
+nav ul {
+  list-style: none;
+  display: flex;
+  gap: 18px;
+}
+
+nav ul li a {
+  text-decoration: none;
+  color: #fff;
+  font-weight: 600;
+  transition: color 0.2s ease;
+}
+
+nav ul li a:hover {
+  color: #ffcc00;
+}
+
+.search-box {
+  display: flex;
+  gap: 5px;
+}
+
+.search-box input {
+  padding: 6px 8px;
+  border-radius: 4px;
+  border: none;
+}
+
+.search-box button {
+  border: none;
+  padding: 6px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* ================= HEADER NOTA ================= */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #fff;
+  padding: 15px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  margin-bottom: 15px;
+}
+
+.header .logo {
+  height: 55px;
+}
+
+.header .info {
+  text-align: right;
+  font-size: 14px;
+}
+
+/* ================= INPUT ================= */
+.no-print input,
+.no-print select,
+.no-print button {
+  padding: 7px 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.no-print button {
+  background: #111;
+  color: #fff;
+  cursor: pointer;
+  border: none;
+}
+
+.no-print button:hover {
+  background: #333;
+}
+
+.select-area {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 15px;
+}
+
+/* ================= TABLE ================= */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+thead {
+  background: #111;
+  color: #fff;
+}
+
+th,
+td {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+  text-align: center;
+  font-size: 14px;
+}
+
+th:first-child,
+td:first-child {
+  text-align: left;
+}
+
+tbody tr:hover {
+  background: #f8f8f8;
+}
+
+td input {
+  width: 70px;
+  padding: 4px;
+  text-align: center;
+}
+
+.del {
+  color: red;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/* ================= TOTAL ================= */
+.total {
+  margin-top: 15px;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.grand-total {
+  font-size: 22px;
+  font-weight: 800;
+  margin-top: 5px;
+}
+
+/* ================= DISKON ================= */
+.diskon-info {
+  margin-top: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #d40000;
+}
+
+/* ================= BUTTON AREA ================= */
+.no-print > button {
+  min-width: 120px;
+}
+
+/* ================= PRINT MODE ================= */
+@media print {
   body {
-    background: #f2f2f2;
-    color: #222;
-  }
-  
-  /* NAVBAR */
-  header {
-    background: #ffffff;
-    color: #fff;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 12px 30px;
-  }
-  
-  header .logo img {
-    height: 45px;
-  }
-  
-  nav ul {
-    list-style: none;
-    display: flex;
-    gap: 20px;
-  }
-  
-  nav ul li a {
-    text-decoration: none;
-    color: #ff0000;
-    font-weight: 500;
-    transition: 0.3s;
-  }
-  
-  nav ul li a:hover {
-    color: #575757;
-  }
-  
-  /* CONTAINER NOTA */
-  .container {
-    max-width: 850px;
-    margin: 30px auto;
     background: #fff;
-    padding: 25px;
-    position: relative;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-    border-radius: 10px;
+    padding: 0;
   }
-  
-  /* WATERMARK */
-  .watermark {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) rotate(-25deg);
-    font-size: 70px;
-    color: rgba(0,0,0,0.06);
-    font-weight: 700;
-    pointer-events: none;
-    user-select: none;
-    white-space: nowrap;
-  }
-  
-  /* HEADER NOTA */
-  .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 25px;
-  }
-  
-  .header .logo {
-    height: 55px;
-  }
-  
-  .header .info {
-    text-align: right;
-    font-size: 13px;
-  }
-  
-  /* INPUT AREA */
-  .select-area {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 15px;
-    flex-wrap: wrap;
-  }
-  
-  .select-area select,
-  .select-area input {
-    padding: 8px 10px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    outline: none;
-  }
-  
-  .select-area select:focus,
-  .select-area input:focus {
-    border-color: #25d366;
-  }
-  
-  /* BUTTON */
-  button {
-    padding: 8px 14px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: 500;
-  }
-  
-  .add-btn { background: #111; color: #fff; }
-  .print-btn { background: #007bff; color: #fff; }
-  .pdf-btn { background: #dc3545; color: #fff; }
-  .wa-btn { background: #25d366; color: #fff; }
-  .reset-btn { background: #6c757d; color: #fff; }
-  
-  button:hover {
-    opacity: 0.9;
-  }
-  
-  /* TABLE */
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 15px;
-  }
-  
-  table thead {
-    background: #111;
-    color: #fff;
-  }
-  
-  table th,
-  table td {
-    padding: 10px;
-    border: 1px solid #ddd;
-    text-align: center;
-    font-size: 14px;
-  }
-  
-  table td input {
-    width: 60px;
-    padding: 5px;
-    text-align: center;
-  }
-  
-  .del {
-    color: red;
-    cursor: pointer;
-    font-size: 13px;
-  }
-  
-  /* TOTAL */
-  .total {
-    text-align: right;
-    font-size: 20px;
-    font-weight: 700;
-    margin-top: 15px;
-  }
-  
-  /* PRINT MODE */
-  .print-only {
-    display: table-cell;
-  }
-  
+
+  header,
   .no-print {
-    display: block;
+    display: none !important;
   }
-  
-  /* PRINT SETTINGS */
-  @media print {
-    body {
-      background: #fff;
-    }
-  
-    header,
-    .no-print {
-      display: none !important;
-    }
-  
-    .container {
-      box-shadow: none;
-      margin: 0;
-      border-radius: 0;
-    }
-  
-    table th,
-    table td {
-      font-size: 12px;
-    }
-  
-    .watermark {
-      font-size: 90px;
-    }
+
+  .print-only {
+    display: table-cell !important;
   }
-  /* ================= A4 PRINT SETTING ================= */
+
+  table {
+    font-size: 12px;
+  }
+
+  .grand-total {
+    font-size: 18px;
+  }
+}
+
+/* default hide print-only */
+.print-only {
+  display: none;
+}
 @page {
-    size: A4;
-    margin: 15mm;
-  }
-  
-  @media print {
-    html, body {
-      width: 210mm;
-      height: 297mm;
-    }
-  
-    body {
-      margin: 0;
-      padding: 0;
-      background: #fff;
-    }
-  
-    .container {
-      width: 100%;
-      min-height: auto;
-      box-shadow: none;
-      border-radius: 0;
-      padding: 0;
-    }
-  }
-  
+  size: A4 landscape;
+  margin: 15mm;
+}
