@@ -5,31 +5,32 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SEDULUR FOTO COPY</title>
   <link rel="stylesheet" href="css/invoce.css">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+   
 </head>
 <body>
 
-<!-- NAVBAR -->
-<header>
-  <div class="logo">
-    <img src="img/loggo/sdlr.png" alt="Sedulur Fotocopy Logo">
-  </div>
-  <nav>
-    <ul>
-      <li><a href="index.html">Home</a></li>
-      <li><a href="cetakfoto.html">Cetak Foto</a></li>
-      <li><a href="cetakinvoice.html">Invoice</a></li>
-      <li><a href="#">About Us</a></li>
-    </ul>
-  </nav>
-  <div class="search-box">
-    <input type="text" placeholder="Cari Produk Disini">
-    <button>🔍</button>
-  </div>
-</header>
+  <!-- NAVBAR -->
+  <header>
+    <div class="logo">
+        <img src="img/loggo/sdlr.png" alt="Sedulur Fotocopy Logo">
+      </div>
+      
+    <nav>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="cetakfoto.html">Cetak Foto</a></li>
+        <li><a href="cetakinvoice.html">Invoice</a></li>
+        <li><a href="#">About Us</a></li>
+      </ul>
+    </nav>
+    <div class="search-box">
+      <input type="text" placeholder="Cari Produk Disini">
+      <button>🔍</button>
+    </div>
+  </header>
 
-<!-- HEADER & INFO -->
-<div class="header" id="notaArea">
+<!-- HEADER -->
+<div class="header">
   <img src="img/loggo/logo1.png" class="logo">
   <div class="info">
     <small>Tanggal: <span id="tgl"></span></small><br>
@@ -43,13 +44,15 @@
   <input type="text" id="namaPelanggan" placeholder="Nama Pelanggan">
 </div>
 
-<!-- INPUT ITEM -->
+<!-- INPUT -->
 <div class="select-area no-print">
   <select id="layanan">
     <option data-type="hp" data-bulat="true">Print Hitam Putih</option>
     <option data-type="warna">Print Warna</option>
     <option data-type="warnastandar">Print Standar</option>
     <option data-type="fullcolor">Full Color</option>
+
+    <!-- FLAT PRICE -->
     <option value="500">Hitam Putih Bolak-Balik</option>
     <option value="4000">Full A4 HVS</option>
     <option value="8000">A3 Buffalo</option>
@@ -65,7 +68,7 @@
   <button onclick="tambah()">Tambah</button>
 </div>
 
-<!-- TABLE INVOICE -->
+<!-- TABLE -->
 <table>
 <thead>
 <tr>
@@ -90,6 +93,7 @@
     <input type="checkbox" id="adminDiskon" onchange="toggleAdminPin()">
     Diskon Admin 7% (PIN)
   </label>
+
   <div id="pinBox" style="display:none;margin-top:5px">
     <input type="password" id="pinInput" placeholder="PIN Admin">
     <button onclick="cekPin()">OK</button>
@@ -102,15 +106,20 @@
     </label>
   </div>
 </div>
+
 <div class="diskon-info" id="diskonKet" style="display:none"></div>
 
 <!-- BUTTON -->
 <div class="no-print" style="margin-top:15px;display:flex;gap:10px;flex-wrap:wrap">
   <button onclick="window.print()">Print</button>
   <button onclick="downloadPDF()">PDF</button>
-  <button onclick="simpanInvoiceKeAirtable()">Simpan ke Airtable</button>
+  <button onclick="sendWA()">WhatsApp</button>
   <button onclick="resetNota()">Reset</button>
 </div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
 <script>
 /* ================= INIT ================= */
@@ -127,9 +136,7 @@ const lembarInput = document.getElementById("lembar");
 const qtyInput = document.getElementById("qty");
 const list = document.getElementById("list");
 const totalView = document.getElementById("totalView");
-const diskonKet = document.getElementById("diskonKet");
-const pinBox = document.getElementById("pinBox");
-const pinInput = document.getElementById("pinInput");
+const notaArea = document.getElementById("notaArea");
 const namaPelanggan = document.getElementById("namaPelanggan");
 
 noNota.innerText = "INV-" + Date.now();
@@ -143,11 +150,14 @@ function updateNama(){
 namaPelanggan.addEventListener("input", updateNama);
 
 /* ================= PRICING ================= */
-function bulatkanHP(n){ let s=n%1000; return s===0?n:(s<500?n-s+500:n-s+1000);}
-function hargaHitamPutih(q){ return q>=200?250:300; }
-function hargaWarna(q){ return q>=300?400:q>=100?450:500; }
-function hargaWarnaStandar(q){ return q>=150?500:q>=50?750:2000; }
-function hargaFullColor(q){ return q>=150?1500:q>=50?1800:2000; }
+function bulatkanHP(n){
+  let s = n % 1000;
+  return s === 0 ? n : (s < 500 ? n - s + 500 : n - s + 1000);
+}
+function hargaHitamPutih(q){ return q >= 200 ? 250 : 300; }
+function hargaWarna(q){ return q >= 300 ? 400 : q >= 100 ? 450 : 500; }
+function hargaWarnaStandar(q){ return q >= 150 ? 500 : q >= 50 ? 750 : 2000; }
+function hargaFullColor(q){ return q >= 150 ? 1500 : q >= 50 ? 1800 : 2000; }
 
 /* ================= TAMBAH ================= */
 function tambah(){
@@ -155,19 +165,19 @@ function tambah(){
   const l = parseInt(lembarInput.value)||1;
   const q = parseInt(qtyInput.value)||1;
   const type = opt.dataset.type || "flat";
-  const bulat = opt.dataset.bulat==="true";
+  const bulat = opt.dataset.bulat === "true";
 
   let harga =
-    type==="hp"?hargaHitamPutih(l):
-    type==="warna"?hargaWarna(l):
-    type==="warnastandar"?hargaWarnaStandar(l):
-    type==="fullcolor"?hargaFullColor(l):
+    type==="hp" ? hargaHitamPutih(l) :
+    type==="warna" ? hargaWarna(l) :
+    type==="warnastandar" ? hargaWarnaStandar(l) :
+    type==="fullcolor" ? hargaFullColor(l) :
     parseInt(opt.value);
 
   const tr = document.createElement("tr");
   tr.dataset.type = type;
-  tr.dataset.bulat = bulat?"1":"0";
-  tr.dataset.flat = parseInt(opt.value)||0;
+  tr.dataset.bulat = bulat ? "1":"0";
+  tr.dataset.flat = parseInt(opt.value) || 0;
 
   tr.innerHTML = `
     <td>${opt.text}</td>
@@ -190,13 +200,13 @@ function hitungRow(tr){
   const type = tr.dataset.type;
 
   let harga =
-    type==="hp"?hargaHitamPutih(l):
-    type==="warna"?hargaWarna(l):
-    type==="warnastandar"?hargaWarnaStandar(l):
-    type==="fullcolor"?hargaFullColor(l):
+    type==="hp" ? hargaHitamPutih(l) :
+    type==="warna" ? hargaWarna(l) :
+    type==="warnastandar" ? hargaWarnaStandar(l) :
+    type==="fullcolor" ? hargaFullColor(l) :
     parseInt(tr.dataset.flat);
 
-  let sub = harga*l*q;
+  let sub = harga * l * q;
   if(tr.dataset.bulat==="1") sub = bulatkanHP(sub);
 
   tr.querySelector(".harga").innerText = harga.toLocaleString();
@@ -204,95 +214,75 @@ function hitungRow(tr){
   tr.dataset.subtotal = sub;
 }
 
-function updateRow(el){ hitungRow(el.closest("tr")); hitungTotal(); }
+function updateRow(el){
+  hitungRow(el.closest("tr"));
+  hitungTotal();
+}
 
 /* ================= TOTAL ================= */
 function hitungTotal(){
-  totalAkhir=0;
+  totalAkhir = 0;
   document.querySelectorAll("#list tr").forEach(tr=>{
     totalAkhir += parseInt(tr.dataset.subtotal||0);
   });
+
   totalView.innerText = totalAkhir.toLocaleString();
 
   let diskon = 0;
   let ket = "";
+
   if(adminValid){
-    if(totalAkhir>=200000){
-      diskon=Math.round(totalAkhir*0.07);
-      ket=`Diskon Admin 7%: -Rp ${diskon.toLocaleString()}`;
-    }else ket="Diskon Admin tidak berlaku (min Rp 200.000)";
+    if(totalAkhir >= 200000){
+      diskon = Math.round(totalAkhir * 0.07);
+      ket = `Diskon Admin 7%: -Rp ${diskon.toLocaleString()}`;
+    }else{
+      ket = "Diskon Admin tidak berlaku (min Rp 200.000)";
+    }
   }
 
-  diskonKet.innerText=ket;
-  document.getElementById("grandTotalView").innerText=(totalAkhir-diskon).toLocaleString();
+  diskonKet.innerText = ket;
+  grandTotalView.innerText = (totalAkhir - diskon).toLocaleString();
 }
 
 /* ================= DISKON ================= */
-function toggleDiskonKet(){ diskonKet.style.display=document.getElementById("showDiskonKet").checked?"block":"none"; }
-function toggleAdminPin(){
-  pinBox.style.display=document.getElementById("adminDiskon").checked?"block":"none";
-  if(!document.getElementById("adminDiskon").checked){ adminValid=false; pinInput.value=""; hitungTotal(); }
+function toggleDiskonKet(){
+  diskonKet.style.display = showDiskonKet.checked ? "block" : "none";
 }
-function cekPin(){ adminValid=pinInput.value===ADMIN_PIN; alert(adminValid?"PIN BENAR":"PIN SALAH"); hitungTotal(); }
+function toggleAdminPin(){
+  pinBox.style.display = adminDiskon.checked ? "block":"none";
+  if(!adminDiskon.checked){
+    adminValid=false;
+    pinInput.value="";
+    hitungTotal();
+  }
+}
+function cekPin(){
+  adminValid = pinInput.value === ADMIN_PIN;
+  alert(adminValid ? "PIN BENAR" : "PIN SALAH");
+  hitungTotal();
+}
 
-/* ================= ENTER ================= */
+/* ================= ENTER MODE ================= */
 [namaPelanggan, lembarInput, qtyInput].forEach(el=>{
-  el.addEventListener("keydown",e=>{if(e.key==="Enter"){ e.preventDefault(); if(el!==namaPelanggan) tambah(); } });
+  el.addEventListener("keydown",e=>{
+    if(e.key==="Enter"){
+      e.preventDefault();
+      if(el!==namaPelanggan) tambah();
+    }
+  });
 });
 
 /* ================= UTIL ================= */
 function hapus(el){ el.closest("tr").remove(); hitungTotal(); }
 function resetNota(){ location.reload(); }
-function downloadPDF(){ html2pdf().from(document.getElementById("notaArea")).save(); }
-
-/* ================= AIRTABLE ================= */
-const AIRTABLE_API_KEY = "YOUR_API_KEY";
-const BASE_ID = "YOUR_BASE_ID";
-const TABLE_NAME = "Invoices";
-
-async function simpanInvoiceKeAirtable(){
-  const items=[];
-  document.querySelectorAll("#list tr").forEach(tr=>{
-    const tds=tr.querySelectorAll("td");
-    items.push({
-      deskripsi: tds[0].innerText,
-      harga: tds[1].innerText,
-      lembar: tds[2].querySelector("input").value,
-      qty: tds[3].querySelector("input").value,
-      subtotal: tds[4].innerText
-    });
-  });
-
-  const data={
-    fields:{
-      InvoiceNumber: noNota.innerText,
-      Date: tgl.innerText,
-      CustomerName: namaView.innerText,
-      Items: JSON.stringify(items),
-      GrandTotal: totalAkhir
-    }
-  };
-
-  try{
-    const res=await fetch(`https://api.airtable.com/v0/${BASE_ID}/${TABLE_NAME}`,{
-      method:"POST",
-      headers:{
-        Authorization:`Bearer ${AIRTABLE_API_KEY}`,
-        "Content-Type":"application/json"
-      },
-      body:JSON.stringify(data)
-    });
-
-    if(res.ok) alert("Invoice tersimpan di Airtable!");
-    else{
-      alert("Gagal menyimpan invoice");
-      console.error(await res.text());
-    }
-  }catch(err){
-    console.error(err);
-    alert("Terjadi error saat menyimpan invoice");
-  }
+function downloadPDF(){ html2pdf().from(notaArea).save(); }
+function sendWA(){
+  window.open(`https://wa.me/6288980484642?text=${encodeURIComponent(
+    "Nota Sedulur Fotocopy\nNama: "+namaView.innerText+
+    "\nGrand Total: Rp "+grandTotalView.innerText
+  )}`);
 }
 </script>
+
 </body>
 </html>
