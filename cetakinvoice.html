@@ -13,14 +13,22 @@
 <!-- ===== NAVBAR ===== -->
 <header>
   <div class="logo">
-    <img src="img/loggo/sdlr.png">
+    <a href="home.html">
+      <img src="img/loggo/sdlr.png" alt="Sedulur Foto Copy">
+    </a>
   </div>
+
+
   <nav>
     <ul>
-      <li><a href="index.html">Home</a></li>
+      <li><a href="home.html">Home</a></li>
       <li><a href="cetakfoto.html">Cetak Foto</a></li>
       <li><a href="cetakinvoice.html">Invoice</a></li>
-      <li><a href="#" onclick="logout()">Logout</a></li>
+      <li>
+        <button class="btn-logout" onclick="logout()">Logout</button>
+      </li>
+      
+   
     </ul>
   </nav>
 </header>
@@ -103,127 +111,142 @@
 
 <!-- ===== SCRIPT ===== -->
 <script>
-const layanan = document.getElementById("layanan");
-const lembarInput = document.getElementById("lembar");
-const qtyInput = document.getElementById("qty");
-const list = document.getElementById("list");
-const totalView = document.getElementById("totalView");
-const discountView = document.getElementById("discountView");
-const grandTotalView = document.getElementById("grandTotalView");
-const namaView = document.getElementById("namaView");
-const namaPelanggan = document.getElementById("namaPelanggan");
-const discountStatus = document.getElementById("discountStatus");
-
-let discountEnabled = false;
-const ADMIN_PASSWORD = "1234";
-
-document.getElementById("noNota").innerText = "INV-" + Date.now();
-const d = new Date();
-document.getElementById("tgl").innerText =
-`${d.getDate()}-${d.getMonth()+1}-${d.getFullYear()}`;
-
-namaPelanggan.oninput = () =>
-namaView.innerText = namaPelanggan.value || "-";
-
-layanan.onchange = () => {
-  const type = layanan.selectedOptions[0].dataset.type;
-  if(type === "jilid"){
-    lembarInput.value = 1;
-    lembarInput.disabled = true;
-  } else {
-    lembarInput.disabled = false;
+  const layanan = document.getElementById("layanan");
+  const lembarInput = document.getElementById("lembar");
+  const qtyInput = document.getElementById("qty");
+  const list = document.getElementById("list");
+  const totalView = document.getElementById("totalView");
+  const discountView = document.getElementById("discountView");
+  const grandTotalView = document.getElementById("grandTotalView");
+  const namaView = document.getElementById("namaView");
+  const namaPelanggan = document.getElementById("namaPelanggan");
+  const discountStatus = document.getElementById("discountStatus");
+  
+  let discountEnabled = false;
+  const ADMIN_PASSWORD = "1234";
+  
+  /* ===== INIT ===== */
+  document.getElementById("noNota").innerText = "INV-" + Date.now();
+  const d = new Date();
+  document.getElementById("tgl").innerText =
+  `${d.getDate()}-${d.getMonth()+1}-${d.getFullYear()}`;
+  
+  namaPelanggan.oninput = () => {
+    namaView.innerText = namaPelanggan.value || "-";
+  };
+  
+  layanan.onchange = () => {
+    const type = layanan.selectedOptions[0].dataset.type;
+    if(type === "jilid"){
+      lembarInput.value = 1;
+      lembarInput.disabled = true;
+    } else {
+      lembarInput.disabled = false;
+    }
+  };
+  
+  /* ===== PEMBULATAN KHUSUS ===== */
+  function bulatkan500(nilai){
+    return Math.ceil(nilai / 500) * 500;
   }
-};
-
-function toggleDiscount(){
-  if(prompt("Password admin:") !== ADMIN_PASSWORD){
-    alert("Password salah");
-    return;
+  
+  /* ===== TAMBAH ITEM ===== */
+  function tambah(){
+    const opt = layanan.selectedOptions[0];
+    const harga = +opt.value;
+    const type = opt.dataset.type;
+    const nama = opt.text.toLowerCase();
+    const qty = +qtyInput.value;
+    const lembar = type === "jilid" ? 1 : +lembarInput.value;
+  
+    let subAsli = type === "jilid"
+      ? harga * qty
+      : harga * lembar * qty;
+  
+    // 🔥 PEMBULATAN HANYA HITAM PUTIH
+    let subFinal = nama.includes("hitam putih")
+      ? bulatkan500(subAsli)
+      : subAsli;
+  
+    const tr = document.createElement("tr");
+    tr.dataset.sub = subFinal;
+  
+    tr.innerHTML = `
+      <td>${opt.text}</td>
+      <td class="print-only">${harga.toLocaleString()}</td>
+      <td>${type === "jilid" ? "-" : lembar}</td>
+      <td>${qty}</td>
+      <td class="print-only">${subFinal.toLocaleString()}</td>
+      <td class="no-print">
+        <span onclick="this.closest('tr').remove(); hitung()">Hapus</span>
+      </td>
+    `;
+  
+    list.appendChild(tr);
+    hitung();
   }
-  discountEnabled = !discountEnabled;
-  discountStatus.innerText = discountEnabled
-    ? "Diskon 7% AKTIF (≥200rb)"
-    : "Diskon nonaktif";
-  hitung();
-}
-
-function tambah(){
-  const opt = layanan.selectedOptions[0];
-  const harga = +opt.value;
-  const type = opt.dataset.type;
-  const qty = +qtyInput.value;
-  const lembar = type === "jilid" ? 1 : +lembarInput.value;
-
-  const sub = type === "jilid"
-    ? harga * qty
-    : harga * lembar * qty;
-
-  const tr = document.createElement("tr");
-  tr.dataset.sub = sub;
-
-  tr.innerHTML = `
-    <td>${opt.text}</td>
-    <td class="print-only">${harga.toLocaleString()}</td>
-    <td>${type === "jilid" ? "-" : lembar}</td>
-    <td>${qty}</td>
-    <td class="print-only">${sub.toLocaleString()}</td>
-    <td class="no-print">
-      <span onclick="this.closest('tr').remove(); hitung()">Hapus</span>
-    </td>
-  `;
-  list.appendChild(tr);
-  hitung();
-}
-
-function hitung(){
-  let total = 0;
-  document.querySelectorAll("#list tr").forEach(tr=>{
-    total += +tr.dataset.sub;
-  });
-
-  let discount = 0;
-  if(discountEnabled && total >= 200000){
-    discount = Math.floor(total * 0.07);
+  
+  /* ===== DISKON ===== */
+  function toggleDiscount(){
+    if(prompt("Password admin:") !== ADMIN_PASSWORD){
+      alert("Password salah");
+      return;
+    }
+    discountEnabled = !discountEnabled;
+    discountStatus.innerText = discountEnabled
+      ? "Diskon 7% AKTIF (≥200rb)"
+      : "Diskon nonaktif";
+    hitung();
   }
-
-  totalView.innerText = total.toLocaleString();
-  discountView.innerText = discount.toLocaleString();
-  grandTotalView.innerText = (total - discount).toLocaleString();
-}
-
-function downloadPDF(){
-  html2pdf().from(document.getElementById("notaArea")).save();
-}
-
-function sendWA(){
-  window.open(`https://wa.me/6288980484642?text=${encodeURIComponent(
-    "Invoice Sedulur Fotocopy\n" +
-    "Admin: " + document.getElementById("adminName").innerText +
-    "\nPelanggan: " + namaView.innerText +
-    "\nGrand Total: Rp " + grandTotalView.innerText
-  )}`);
-}
-</script>
-
-<!-- ===== FIREBASE ===== -->
+  
+  /* ===== HITUNG TOTAL ===== */
+  function hitung(){
+    let total = 0;
+  
+    document.querySelectorAll("#list tr").forEach(tr=>{
+      total += +tr.dataset.sub;
+    });
+  
+    let discount = 0;
+    if(discountEnabled && total >= 200000){
+      discount = Math.floor(total * 0.07);
+    }
+  
+    totalView.innerText = total.toLocaleString();
+    discountView.innerText = discount.toLocaleString();
+    grandTotalView.innerText = (total - discount).toLocaleString();
+  }
+  </script>
+  <!-- ===== FIREBASE ===== -->
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-
-const app = initializeApp({
-  apiKey: "AIzaSyCzk9nMICnFTHaF8_xvGoWuyUuKiP-dS1Y",
-  authDomain: "sedulur-fotocopy-unnes.firebaseapp.com",
-  projectId: "sedulur-fotocopy-unnes"
-});
-const auth = getAuth(app);
-
-onAuthStateChanged(auth, user=>{
-  if(!user) location.href="index.html";
-  else document.getElementById("adminName").innerText = user.email;
-});
-
-window.logout = ()=>signOut(auth).then(()=>location.href="login.html");
-</script>
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+  
+  const app = initializeApp({
+    apiKey: "AIzaSyCzk9nMICnFTHaF8_xvGoWuyUuKiP-dS1Y",
+    authDomain: "sedulur-fotocopy-unnes.firebaseapp.com",
+    projectId: "sedulur-fotocopy-unnes"
+  });
+  const auth = getAuth(app);
+  
+  onAuthStateChanged(auth, user=>{
+    if(!user) location.href="index.html";
+    else document.getElementById("adminName").innerText = user.email;
+  });
+  
+  
+  </script>
+  <script>
+    function logout() {
+      // contoh: hapus status login
+      localStorage.removeItem("login");
+    
+      // arahkan ke halaman login
+      window.location.href = "login.html";
+    }
+    </script>
+    
+  
 
 </body>
 </html>

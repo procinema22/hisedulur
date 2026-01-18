@@ -22,8 +22,11 @@
 <!-- ================= NAVBAR ================= -->
 <header>
   <div class="logo">
-    <img src="img/loggo/sdlr.png" alt="Sedulur Fotocopy Logo">
+    <a href="home.html">
+      <img src="img/loggo/sdlr.png" alt="Sedulur Foto Copy">
+    </a>
   </div>
+
 
   <nav>
     <ul>
@@ -34,10 +37,9 @@
     </ul>
   </nav>
 
-  <div class="search-box">
-    <input type="text" placeholder="Cari Produk Disini">
-    <button>🔍</button>
-  </div>
+  <li>
+    <button class="btn-logout" onclick="logout()">Logout</button>
+  </li>
 </header>
 
 <div class="layout">
@@ -181,12 +183,17 @@ onAuthStateChanged(auth, (user)=>{
   }
 });
 
-window.logout = function(){
-  signOut(auth).then(()=>{
-    window.location.href = "login.html";
-  });
-};
-</script>
 
+</script>
+<script>
+  function logout() {
+    // contoh: hapus status login
+    localStorage.removeItem("login");
+  
+    // arahkan ke halaman login
+    window.location.href = "login.html";
+  }
+  </script>
+  
 </body>
 </html>

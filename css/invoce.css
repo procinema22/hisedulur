@@ -1,214 +1,102 @@
-/* ================= RESET ================= */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: Arial, Helvetica, sans-serif;
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:Arial, Helvetica, sans-serif;
 }
 
-body {
-  background: #f4f4f4;
-  color: #222;
-  padding: 20px;
+body{
+  background:#f4f4f4;
+  padding:20px;
+  color:#222;
 }
 
-/* ================= NAVBAR ================= */
-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: #111;
-  padding: 12px 20px;
-  border-radius: 8px;
-  margin-bottom: 20px;
+/* NAVBAR */
+header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  background:#111;
+  padding:12px 20px;
+  border-radius:8px;
+  margin-bottom:20px;
+}
+header img{height:40px}
+nav ul{display:flex;gap:18px;list-style:none}
+nav a{color:#fff;text-decoration:none;font-weight:600}
+
+/* HEADER NOTA */
+.header{
+  display:flex;
+  justify-content:space-between;
+  background:#fff;
+  padding:15px;
+  border-radius:8px;
+  margin-bottom:15px;
+  border:1px solid #ddd;
+}
+.header .logo{height:55px}
+
+/* INPUT */
+.select-area{
+  display:flex;
+  gap:10px;
+  margin:10px 0;
+  flex-wrap:wrap;
+}
+.field{display:flex;flex-direction:column}
+input,select,button{
+  padding:7px 10px;
+  border-radius:5px;
+  border:1px solid #ccc;
+}
+button{cursor:pointer;background:#111;color:#fff;border:none}
+button:hover{background:#333}
+
+/* TABLE */
+table{
+  width:100%;
+  border-collapse:collapse;
+  background:#fff;
+  margin-top:10px;
+}
+thead{background:#111;color:#fff}
+th,td{
+  padding:10px;
+  border-bottom:1px solid #ddd;
+  text-align:center;
+}
+th:first-child,td:first-child{text-align:left}
+.del{color:red;cursor:pointer;font-weight:bold}
+
+/* TOTAL */
+.total{margin-top:10px;font-weight:600}
+.grand-total{font-size:22px;font-weight:800;margin-top:5px}
+
+/* PRINT */
+.print-only{display:none}
+
+@media print{
+  body{background:#fff;padding:0}
+  header,.no-print{display:none!important}
+  .print-only{display:table-cell!important}
+  table{font-size:12px}
 }
 
-header .logo img {
-  height: 40px;
+@page{
+  size:A4 landscape;
+  margin:15mm;
 }
-
-nav ul {
-  list-style: none;
-  display: flex;
-  gap: 18px;
-}
-
-nav ul li a {
-  text-decoration: none;
+.btn-logout {
+  background: #e53935;
   color: #fff;
-  font-weight: 600;
-  transition: color 0.2s ease;
-}
-
-nav ul li a:hover {
-  color: #ffcc00;
-}
-
-.search-box {
-  display: flex;
-  gap: 5px;
-}
-
-.search-box input {
-  padding: 6px 8px;
-  border-radius: 4px;
   border: none;
-}
-
-.search-box button {
-  border: none;
-  padding: 6px 10px;
-  border-radius: 4px;
+  padding: 8px 14px;
+  border-radius: 6px;
   cursor: pointer;
-}
-
-/* ================= HEADER NOTA ================= */
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: #fff;
-  padding: 15px;
-  border-radius: 8px;
-  border: 1px solid #ddd;
-  margin-bottom: 15px;
-}
-
-.header .logo {
-  height: 55px;
-}
-
-.header .info {
-  text-align: right;
-  font-size: 14px;
-}
-
-/* ================= INPUT ================= */
-.no-print input,
-.no-print select,
-.no-print button {
-  padding: 7px 10px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-}
-
-.no-print button {
-  background: #111;
-  color: #fff;
-  cursor: pointer;
-  border: none;
-}
-
-.no-print button:hover {
-  background: #333;
-}
-
-.select-area {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-  margin-bottom: 15px;
-}
-
-/* ================= TABLE ================= */
-table {
-  width: 100%;
-  border-collapse: collapse;
-  background: #fff;
-  border-radius: 8px;
-  overflow: hidden;
-}
-
-thead {
-  background: #111;
-  color: #fff;
-}
-
-th,
-td {
-  padding: 10px;
-  border-bottom: 1px solid #ddd;
-  text-align: center;
-  font-size: 14px;
-}
-
-th:first-child,
-td:first-child {
-  text-align: left;
-}
-
-tbody tr:hover {
-  background: #f8f8f8;
-}
-
-td input {
-  width: 70px;
-  padding: 4px;
-  text-align: center;
-}
-
-.del {
-  color: red;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-/* ================= TOTAL ================= */
-.total {
-  margin-top: 15px;
-  font-size: 16px;
   font-weight: 600;
 }
 
-.grand-total {
-  font-size: 22px;
-  font-weight: 800;
-  margin-top: 5px;
-}
-
-/* ================= DISKON ================= */
-.diskon-info {
-  margin-top: 8px;
-  font-size: 14px;
-  font-weight: 600;
-  color: #d40000;
-}
-
-/* ================= BUTTON AREA ================= */
-.no-print > button {
-  min-width: 120px;
-}
-
-/* ================= PRINT MODE ================= */
-@media print {
-  body {
-    background: #fff;
-    padding: 0;
-  }
-
-  header,
-  .no-print {
-    display: none !important;
-  }
-
-  .print-only {
-    display: table-cell !important;
-  }
-
-  table {
-    font-size: 12px;
-  }
-
-  .grand-total {
-    font-size: 18px;
-  }
-}
-
-/* default hide print-only */
-.print-only {
-  display: none;
-}
-@page {
-  size: A4 landscape;
-  margin: 15mm;
+.btn-logout:hover {
+  background: #c62828;
 }

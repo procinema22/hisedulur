@@ -297,3 +297,16 @@ header {
 .hero img {
   filter: brightness(0.95);
 }
+.btn-logout {
+  background: #e53935;
+  color: #fff;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.btn-logout:hover {
+  background: #c62828;
+}

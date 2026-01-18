@@ -30,7 +30,8 @@
       <li><a href="cetakfoto.html">Cetak Foto</a></li>
       <li><a href="cetakinvoice.html">Invoice</a></li>
       <li><a href="#">About Us</a></li>
-      <li><a href="#" onclick="logout()">Logout</a></li>
+      
+      
       
       <button class="dark-toggle" onclick="toggleDarkMode()" title="Mode Gelap">
         🌙
@@ -38,10 +39,9 @@
     </ul>
   </nav>
 
-  <div class="search-box">
-    <input type="text" placeholder="Cari Produk Disini">
-    <button>🔍</button>
-  </div>
+  <li>
+    <button class="btn-logout" onclick="logout()">Logout</button>
+  </li>
 </header>
 
 <!-- ================= HERO ================= -->
@@ -151,7 +151,16 @@
     localStorage.setItem("theme", isDark ? "dark" : "light");
   }
 </script>
-
+<script>
+  function logout() {
+    // contoh: hapus status login
+    localStorage.removeItem("login");
+  
+    // arahkan ke halaman login
+    window.location.href = "login.html";
+  }
+  </script>
+  
 
 </body>
 </html>
