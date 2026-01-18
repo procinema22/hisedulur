@@ -4,60 +4,74 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Invoice | Sedulur Foto Copy</title>
-
 <link rel="icon" href="img/loggo/sdlr.png">
 <link rel="stylesheet" href="css/invoce.css">
 </head>
 <body>
 
-<!-- ===== NAVBAR ===== -->
-<header>
+<!-- NAVBAR (tidak masuk PDF) -->
+<header class="no-print">
   <div class="logo">
-    <a href="home.html">
-      <img src="img/loggo/sdlr.png" alt="Sedulur Foto Copy">
-    </a>
+    <a href="home.html"><img src="img/loggo/sdlr.png" alt="Sedulur Foto Copy"></a>
   </div>
-
-
   <nav>
     <ul>
       <li><a href="home.html">Home</a></li>
       <li><a href="cetakfoto.html">Cetak Foto</a></li>
       <li><a href="cetakinvoice.html">Invoice</a></li>
-      <li>
-        <button class="btn-logout" onclick="logout()">Logout</button>
-      </li>
-      
-   
+      <li><button class="btn-logout" onclick="logout()">Logout</button></li>
     </ul>
   </nav>
 </header>
 
-<!-- ===== HEADER INVOICE ===== -->
-<div class="header" id="notaArea">
-  <img src="img/loggo/logo1.png" class="logo">
-  <div class="info">
-    <small>Tanggal: <span id="tgl"></span></small><br>
-    <small>No Nota: <span id="noNota"></span></small><br>
-    <small>Pelanggan: <span id="namaView">-</span></small><br>
-    <small>Admin: <span id="adminName">-</span></small>
+<!-- AREA NOTA (Hanya ini masuk PDF) -->
+<div id="notaArea">
+  <div class="header">
+    <img src="img/loggo/logo1.png" class="logo">
+    <div class="info">
+      <small>Tanggal: <span id="tgl"></span></small><br>
+      <small>No Nota: <span id="noNota"></span></small><br>
+      <small>Pelanggan: <span id="namaView">-</span></small><br>
+      <small>Admin: <span id="adminName">-</span></small>
+    </div>
   </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Deskripsi</th>
+        <th>Harga</th>
+        <th>Lembar</th>
+        <th>Qty</th>
+        <th>Subtotal</th>
+      </tr>
+    </thead>
+    <tbody id="list"></tbody>
+  </table>
+
+  <div class="total">Total: Rp <span id="totalView">0</span></div>
+  <div class="total">Diskon: Rp <span id="discountView">0</span></div>
+  <div class="grand-total">Grand Total: Rp <span id="grandTotalView">0</span></div>
 </div>
 
-<!-- ===== INPUT ===== -->
+<!-- INPUT PELANGGAN (tidak masuk PDF) -->
 <div class="no-print">
   <input type="text" id="namaPelanggan" placeholder="Nama Pelanggan">
 </div>
 
+<!-- SELECT LAYANAN (lengkap) -->
 <div class="select-area no-print">
 <select id="layanan">
   <!-- PRINT -->
   <option value="300" data-type="print">Print Hitam Putih</option>
-  <option value="500" data-type="print">Print Warna</option>
+  <option value="500" data-type="print">Print Warna Kecil</option>
+  <option value="1500" data-type="print">Print Warna Sedang</option>
+  <option value="2000" data-type="print">Print Warna Penuh</option>
+  <option value="1000" data-type="jilid">Print Amplop</option>
   <option value="500" data-type="print">HP Bolak Balik</option>
 
-  <!-- KERTAS -->
-  <option value="4000" data-type="print">A4 HVS</option>
+  <!-- KERTAS A3 -->
+  <option value="4000" data-type="print">A3 HVS</option>
   <option value="8000" data-type="print">A3 Buffalo</option>
   <option value="10000" data-type="print">A3 Glossy</option>
 
@@ -66,6 +80,10 @@
   <option value="4000" data-type="jilid">Jilid Mika</option>
   <option value="15000" data-type="jilid">Softcover</option>
   <option value="18000" data-type="jilid">Softcover Sambung</option>
+
+  <!-- ATK -->
+  <option value="1000" data-type="jilid">Map Kertas</option>
+  <option value="4000" data-type="jilid">Map Plastik</option>
 </select>
 
 <input type="number" id="lembar" value="1" min="1">
@@ -73,152 +91,131 @@
 <button onclick="tambah()">Tambah</button>
 </div>
 
-<!-- ===== TABLE ===== -->
-<table>
-<thead>
-<tr>
-  <th>Deskripsi</th>
-  <th class="print-only">Harga</th>
-  <th>Lembar</th>
-  <th>Qty</th>
-  <th class="print-only">Subtotal</th>
-  <th class="no-print">Aksi</th>
-</tr>
-</thead>
-<tbody id="list"></tbody>
-</table>
-
-<!-- ===== TOTAL ===== -->
-<div class="total">Total: Rp <span id="totalView">0</span></div>
-<div class="total">Diskon: Rp <span id="discountView">0</span></div>
-<div class="grand-total">Grand Total: Rp <span id="grandTotalView">0</span></div>
-
-<!-- ===== DISKON ADMIN ===== -->
+<!-- TOMBOL DISKON ADMIN -->
 <div class="no-print">
-<button onclick="toggleDiscount()">Aktifkan Diskon Admin</button>
-<small id="discountStatus">Diskon nonaktif</small>
+  <button onclick="toggleDiscount()">Aktifkan / Nonaktifkan Diskon Admin</button>
+  <small id="discountStatus">Diskon NONAKTIF</small>
 </div>
 
-<!-- ===== BUTTON ===== -->
+<!-- BUTTON PRINT / PDF / RESET -->
 <div class="no-print" style="display:flex;gap:10px">
-<button onclick="window.print()">Print</button>
-<button onclick="downloadPDF()">PDF</button>
-<button onclick="sendWA()">WhatsApp</button>
-<button onclick="location.reload()">Reset</button>
+  <button onclick="window.print()">Print</button>
+  <button onclick="downloadPDF()">PDF</button>
+  <button onclick="location.reload()">Reset</button>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
-<!-- ===== SCRIPT ===== -->
 <script>
-  const layanan = document.getElementById("layanan");
-  const lembarInput = document.getElementById("lembar");
-  const qtyInput = document.getElementById("qty");
-  const list = document.getElementById("list");
-  const totalView = document.getElementById("totalView");
-  const discountView = document.getElementById("discountView");
-  const grandTotalView = document.getElementById("grandTotalView");
-  const namaView = document.getElementById("namaView");
-  const namaPelanggan = document.getElementById("namaPelanggan");
-  const discountStatus = document.getElementById("discountStatus");
-  
-  let discountEnabled = false;
-  const ADMIN_PASSWORD = "1234";
-  
-  /* ===== INIT ===== */
-  document.getElementById("noNota").innerText = "INV-" + Date.now();
-  const d = new Date();
-  document.getElementById("tgl").innerText =
-  `${d.getDate()}-${d.getMonth()+1}-${d.getFullYear()}`;
-  
-  namaPelanggan.oninput = () => {
-    namaView.innerText = namaPelanggan.value || "-";
-  };
-  
-  layanan.onchange = () => {
-    const type = layanan.selectedOptions[0].dataset.type;
-    if(type === "jilid"){
-      lembarInput.value = 1;
-      lembarInput.disabled = true;
-    } else {
-      lembarInput.disabled = false;
-    }
-  };
-  
-  /* ===== PEMBULATAN KHUSUS ===== */
-  function bulatkan500(nilai){
-    return Math.ceil(nilai / 500) * 500;
+const layanan = document.getElementById("layanan");
+const lembarInput = document.getElementById("lembar");
+const qtyInput = document.getElementById("qty");
+const list = document.getElementById("list");
+const totalView = document.getElementById("totalView");
+const discountView = document.getElementById("discountView");
+const grandTotalView = document.getElementById("grandTotalView");
+const namaView = document.getElementById("namaView");
+const namaPelanggan = document.getElementById("namaPelanggan");
+const discountStatus = document.getElementById("discountStatus");
+
+let discountEnabled = false; // Diskon default NONAKTIF
+const ADMIN_PASSWORD = "1234";
+const DISCOUNT_PERCENT = 0.07; // 7%
+const MIN_DISCOUNT = 200000; // minimal total
+
+// INIT
+document.getElementById("noNota").innerText = "INV-" + Date.now();
+const d = new Date();
+document.getElementById("tgl").innerText =
+`${d.getDate()}-${d.getMonth()+1}-${d.getFullYear()}`;
+
+namaPelanggan.oninput = () => { namaView.innerText = namaPelanggan.value || "-"; };
+
+layanan.onchange = () => {
+  const type = layanan.selectedOptions[0].dataset.type;
+  if(type === "jilid"){
+    lembarInput.value = 1;
+    lembarInput.disabled = true;
+  } else { lembarInput.disabled = false; }
+};
+
+// TAMBAH ITEM
+function bulatkan500(nilai){ return Math.ceil(nilai / 500) * 500; }
+
+function tambah(){
+  const opt = layanan.selectedOptions[0];
+  const harga = +opt.value;
+  const type = opt.dataset.type;
+  const nama = opt.text.toLowerCase();
+  const qty = +qtyInput.value;
+  const lembar = type === "jilid" ? 1 : +lembarInput.value;
+
+  let subAsli = type === "jilid" ? harga * qty : harga * lembar * qty;
+  let subFinal = nama.includes("hitam putih") ? bulatkan500(subAsli) : subAsli;
+
+  const tr = document.createElement("tr");
+  tr.dataset.sub = subFinal;
+  tr.innerHTML = `
+    <td>${opt.text}</td>
+    <td>${harga.toLocaleString()}</td>
+    <td>${type === "jilid" ? "-" : lembar}</td>
+    <td>${qty}</td>
+    <td>${subFinal.toLocaleString()}</td>
+  `;
+  list.appendChild(tr);
+  hitung();
+}
+
+// HITUNG TOTAL + DISKON
+function hitung(){
+  let total = 0;
+  document.querySelectorAll("#list tr").forEach(tr => { total += +tr.dataset.sub; });
+  let discount = 0;
+  if(discountEnabled && total >= MIN_DISCOUNT) discount = Math.floor(total * DISCOUNT_PERCENT);
+
+  totalView.innerText = total.toLocaleString();
+  discountView.innerText = discount.toLocaleString();
+  grandTotalView.innerText = (total - discount).toLocaleString();
+}
+
+// TOGGLE DISKON ADMIN
+function toggleDiscount() {
+  const pass = prompt("Masukkan password admin:");
+  if(pass !== ADMIN_PASSWORD){
+    alert("Password salah!");
+    return;
   }
-  
-  /* ===== TAMBAH ITEM ===== */
-  function tambah(){
-    const opt = layanan.selectedOptions[0];
-    const harga = +opt.value;
-    const type = opt.dataset.type;
-    const nama = opt.text.toLowerCase();
-    const qty = +qtyInput.value;
-    const lembar = type === "jilid" ? 1 : +lembarInput.value;
-  
-    let subAsli = type === "jilid"
-      ? harga * qty
-      : harga * lembar * qty;
-  
-    // 🔥 PEMBULATAN HANYA HITAM PUTIH
-    let subFinal = nama.includes("hitam putih")
-      ? bulatkan500(subAsli)
-      : subAsli;
-  
-    const tr = document.createElement("tr");
-    tr.dataset.sub = subFinal;
-  
-    tr.innerHTML = `
-      <td>${opt.text}</td>
-      <td class="print-only">${harga.toLocaleString()}</td>
-      <td>${type === "jilid" ? "-" : lembar}</td>
-      <td>${qty}</td>
-      <td class="print-only">${subFinal.toLocaleString()}</td>
-      <td class="no-print">
-        <span onclick="this.closest('tr').remove(); hitung()">Hapus</span>
-      </td>
-    `;
-  
-    list.appendChild(tr);
-    hitung();
-  }
-  
-  /* ===== DISKON ===== */
-  function toggleDiscount(){
-    if(prompt("Password admin:") !== ADMIN_PASSWORD){
-      alert("Password salah");
-      return;
-    }
-    discountEnabled = !discountEnabled;
-    discountStatus.innerText = discountEnabled
-      ? "Diskon 7% AKTIF (≥200rb)"
-      : "Diskon nonaktif";
-    hitung();
-  }
-  
-  /* ===== HITUNG TOTAL ===== */
-  function hitung(){
-    let total = 0;
-  
-    document.querySelectorAll("#list tr").forEach(tr=>{
-      total += +tr.dataset.sub;
-    });
-  
-    let discount = 0;
-    if(discountEnabled && total >= 200000){
-      discount = Math.floor(total * 0.07);
-    }
-  
-    totalView.innerText = total.toLocaleString();
-    discountView.innerText = discount.toLocaleString();
-    grandTotalView.innerText = (total - discount).toLocaleString();
-  }
-  </script>
-  <!-- ===== FIREBASE ===== -->
-<script type="module">
+  discountEnabled = !discountEnabled;
+  discountStatus.innerText = discountEnabled ? "Diskon AKTIF" : "Diskon NONAKTIF";
+  hitung();
+}
+
+// DOWNLOAD PDF
+function downloadPDF() {
+  const element = document.getElementById("notaArea");
+  let nama = namaPelanggan.value || "Pelanggan";
+  nama = nama.replace(/[^a-z0-9]/gi, "_");
+
+  html2pdf().set({
+    margin: 10,
+    filename: `Invoice_${nama}.pdf`,
+    image: { type: 'jpeg', quality: 0.98 },
+    html2canvas: { scale: 2 },
+    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+  }).from(element).save();
+}
+
+// LOGOUT
+function logout(){
+  localStorage.removeItem("login");
+  location.href = "login.html";
+}
+
+// HITUNG OTOMATIS SETIAP TAMBAH
+list.addEventListener('DOMNodeInserted', hitung);
+</script>
+ <!-- ===== FIREBASE ===== -->
+ <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
   import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
   
@@ -246,7 +243,5 @@
     }
     </script>
     
-  
-
 </body>
 </html>
