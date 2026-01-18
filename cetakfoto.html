@@ -4,150 +4,189 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- TITLE TAB -->
   <title>SEDULUR FOTO COPY</title>
 
-  <!-- FAVICON TAB (LOGO KECIL) -->
   <link rel="icon" type="image/png" href="img/loggo/sdlr.png">
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/cetak.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/cetak.css">
 
-<script src="https://cdn.jsdelivr.net/npm/exif-js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/exif-js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  
+  
 </head>
 
 <body>
-    <header>
-        <div class="logo">
-            <img src="img/loggo/sdlr.png" alt="Sedulur Fotocopy Logo">
-          </div>
-          
-        <nav>
-          <ul>
-            <li><a href="index.html">Home</a></li>
-            <li><a href="cetakfoto.html">Cetak Foto</a></li>
-            <li><a href="cetakinvoice.html">Invoice</a></li>
-            <li><a href="#">About Us</a></li>
-          </ul>
-        </nav>
-        <div class="search-box">
-          <input type="text" placeholder="Cari Produk Disini">
-          <button>🔍</button>
-        </div>
-      </header>
+
+<!-- ================= NAVBAR ================= -->
+<header>
+  <div class="logo">
+    <img src="img/loggo/sdlr.png" alt="Sedulur Fotocopy Logo">
+  </div>
+
+  <nav>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="cetakfoto.html">Cetak Foto</a></li>
+      <li><a href="cetakinvoice.html">Invoice</a></li>
+      <li><a href="#" onclick="logout()">Logout</a></li>
+    </ul>
+  </nav>
+
+  <div class="search-box">
+    <input type="text" placeholder="Cari Produk Disini">
+    <button>🔍</button>
+  </div>
+</header>
+
 <div class="layout">
 
-    <!-- ========= PANEL KIRI (FORM) ========= -->
-    <aside class="left-panel">
+  <!-- ========= PANEL KIRI ========= -->
+  <aside class="left-panel">
 
-        <h2 class="section-title">SEDANG ADA UPDATE SABAR YA</h2>
+    <h2 class="section-title">SEDANG ADA UPDATE SABAR YA</h2>
 
-        <label>Pilih Mode Cetak</label>
-        <select id="modeSelect">
-            <option value="normal">Mode LAPRAK OTOMATIS</option>
-            <option value="perfoto">Mode PAS FOTO</option>
-            <option value="circle">Mode LINGKARAN</option>
-        </select>
+    <label>Pilih Mode Cetak</label>
+    <select id="modeSelect">
+      <option value="normal">Mode LAPRAK OTOMATIS</option>
+      <option value="perfoto">Mode PAS FOTO</option>
+      <option value="circle">Mode LINGKARAN</option>
+    </select>
 
-        <div id="circleControls" style="display:none;">
-            <label>Diameter Lingkaran (cm)</label>
-            <input id="circleDiameter" type="number" value="4">
-        </div>
+    <div id="circleControls" style="display:none;">
+      <label>Diameter Lingkaran (cm)</label>
+      <input id="circleDiameter" type="number" value="4">
+    </div>
 
-        <label>Pilih Ukuran Kotak (cm)</label>
-        <select id="sizeSelect">
-            <option value="2x3">2 x 3</option>
-            <option value="3x4">3 x 4</option>
-            <option value="4x6">4 x 6</option>
-            <option value="5x5">5 x 5</option>
-            <option value="6x9">6 x 9</option>
-            <option value="10x15">10 x 15</option>
-            <option value="custom">Custom...</option>
-        </select>
+    <label>Pilih Ukuran Kotak (cm)</label>
+    <select id="sizeSelect">
+      <option value="2x3">2 x 3</option>
+      <option value="3x4">3 x 4</option>
+      <option value="4x6">4 x 6</option>
+      <option value="5x5">5 x 5</option>
+      <option value="6x9">6 x 9</option>
+      <option value="10x15">10 x 15</option>
+      <option value="custom">Custom...</option>
+    </select>
 
-        <div id="customSize" style="display:none;">
-            <input id="customW" type="number" placeholder="Lebar (cm)">
-            <input id="customH" type="number" placeholder="Tinggi (cm)">
-        </div>
+    <div id="customSize" style="display:none;">
+      <input id="customW" type="number" placeholder="Lebar (cm)">
+      <input id="customH" type="number" placeholder="Tinggi (cm)">
+    </div>
 
-        <label>Upload Foto (banyak)</label>
-        <div id="dropArea" class="drop-area">
-            Tarik & Letakkan Foto / Klik
-        </div>
-        <input id="upload" type="file" multiple accept="image/*" hidden>
+    <label>Upload Foto (banyak)</label>
+    <div id="dropArea" class="drop-area">
+      Tarik & Letakkan Foto / Klik
+    </div>
+    <input id="upload" type="file" multiple accept="image/*" hidden>
 
-            <label><input type="checkbox" id="manualHargaCheckbox"> Gunakan Harga Manual</label>
-        <div id="manualHargaBox" style="display:none;">
-            <label>Harga Manual (Rp)</label>
-            <input id="manualHargaInput" type="number" value="1000">
-        </div>
+    <label>
+      <input type="checkbox" id="manualHargaCheckbox">
+      Gunakan Harga Manual
+    </label>
 
-        <label><input type="checkbox" id="hideInfo"> Sembunyikan Nama & Harga di PDF</label>
+    <div id="manualHargaBox" style="display:none;">
+      <label>Harga Manual (Rp)</label>
+      <input id="manualHargaInput" type="number" value="1000">
+    </div>
 
-        <label>Margin (mm)</label>
-        <input id="marginInputMm" type="number" value="5">
+    <label>
+      <input type="checkbox" id="hideInfo">
+      Sembunyikan Nama & Harga di PDF
+    </label>
 
-        <label>Gap antar foto (px)</label>
-        <input id="gap" type="number" value="20">
+    <label>Margin (mm)</label>
+    <input id="marginInputMm" type="number" value="5">
 
-        <label>Nama Pelanggan</label>
-        <input id="userName" type="text" placeholder="Nama pengguna">
+    <label>Gap antar foto (px)</label>
+    <input id="gap" type="number" value="20">
 
-        <label><input type="checkbox" id="laprakMode"> Mode Laprak Manual</label>
-        <div id="laprakControls" style="display:none;">
-            <label>Nama Laprak</label>
-            <input type="text" id="laprakName">
-            <label>Harga Laprak (Rp)</label>
-            <input type="number" id="laprakPrice" value="2000">
-        </div>
+    <label>Nama Pelanggan</label>
+    <input id="userName" type="text" placeholder="Nama pengguna">
 
-        <div class="price" id="priceDisplay">Harga: Rp 0</div>
+    <label>
+      <input type="checkbox" id="laprakMode">
+      Mode Laprak Manual
+    </label>
 
-        <div id="batchList"></div>
-        <label>
-            <input type="checkbox" id="watermarkCheckbox" checked disabled>
-            hubungi admin untuk menghilangkan watermark
-          </label>
-          
+    <div id="laprakControls" style="display:none;">
+      <label>Nama Laprak</label>
+      <input type="text" id="laprakName">
+      <label>Harga Laprak (Rp)</label>
+      <input type="number" id="laprakPrice" value="2000">
+    </div>
 
-    </aside>
+    <div class="price" id="priceDisplay">Harga: Rp 0</div>
+    <div id="batchList"></div>
 
-    <!-- ========= PANEL TENGAH (CANVAS) ========= -->
-    <section class="center-panel">
-        <canvas id="canvas" width="1240" height="1754"></canvas>
-        
+    <label>
+      <input type="checkbox" checked disabled>
+      hubungi admin untuk menghilangkan watermark
+    </label>
 
-        <div class="page-nav" id="pageNav" style="display:none;">
-            <button id="prevPage">⬅</button>
-            <div id="pageIndicator">Halaman 1 / 1</div>
-            <button id="nextPage">➡</button>
-        </div>
-    </section>
+  </aside>
 
-    <!-- ========= PANEL KANAN (AKSI CEPAT) ========= -->
-    <aside class="right-panel">
+  <!-- ========= PANEL TENGAH ========= -->
+  <section class="center-panel">
+    <canvas id="canvas" width="1240" height="1754"></canvas>
 
-        <h2 class="section-title">⚡ Aksi Cepat</h2>
+    <div class="page-nav" id="pageNav" style="display:none;">
+      <button id="prevPage">⬅</button>
+      <div id="pageIndicator">Halaman 1 / 1</div>
+      <button id="nextPage">➡</button>
+    </div>
+  </section>
 
-        <button id="previewBtn" class="btn blue">👁 Preview Cepat</button>
-        <button id="generateBtn" class="btn green">📄 Buat Kolase</button>
-        <button id="downloadPdf" class="btn purple">💾 Buka PDF</button>
-        <button id="reset" class="btn red">🔁 Reset</button>
-    </aside>
-    
+  <!-- ========= PANEL KANAN ========= -->
+  <aside class="right-panel">
+    <h2 class="section-title">⚡ Aksi Cepat</h2>
+    <button id="previewBtn" class="btn blue">👁 Preview Cepat</button>
+    <button id="generateBtn" class="btn green">📄 Buat Kolase</button>
+    <button id="downloadPdf" class="btn purple">💾 Buka PDF</button>
+    <button id="reset" class="btn red">🔁 Reset</button>
+  </aside>
 
 </div>
+
 <div id="loadingOverlay">
-    <div class="loader"></div>
-    <p>Memproses... tunggu sebentar ya</p>
-  </div>
-  
+  <div class="loader"></div>
+  <p>Memproses... tunggu sebentar ya</p>
+</div>
 
-  <div id="toast"></div>
-
-  
+<div id="toast"></div>
 
 <script src="js/script.js"></script>
+
+<!-- ================= FIREBASE AUTH ================= -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCzk9nMICnFTHaF8_xvGoWuyUuKiP-dS1Y",
+  authDomain: "sedulur-fotocopy-unnes.firebaseapp.com",
+  projectId: "sedulur-fotocopy-unnes",
+  storageBucket: "sedulur-fotocopy-unnes.firebasestorage.app",
+  messagingSenderId: "899088194781",
+  appId: "1:899088194781:web:597f1fd8766e9b71dd8f34"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+onAuthStateChanged(auth, (user)=>{
+  if(!user){
+    window.location.href = "login.html";
+  }
+});
+
+window.logout = function(){
+  signOut(auth).then(()=>{
+    window.location.href = "login.html";
+  });
+};
+</script>
+
 </body>
 </html>

@@ -253,3 +253,47 @@ nav a:hover {
   text-align: center;
   margin-top: 8px;
 }
+/* ================= DARK MODE VARIABLE ================= */
+:root {
+  --bg: #ffffff;
+  --text: #111111;
+  --card: #f5f5f5;
+  --header: #ffffff;
+}
+
+body.dark {
+  --bg: #0f0f0f;
+  --text: #f1f1f1;
+  --card: #1e1e1e;
+  --header: #121212;
+}
+
+/* ================= APPLY VARIABLE ================= */
+body {
+  background: var(--bg);
+  color: var(--text);
+  transition: background 0.3s, color 0.3s;
+}
+
+header {
+  background: var(--header);
+}
+
+.product-card {
+  background: var(--card);
+}
+
+/* ================= DARK MODE BUTTON ================= */
+.dark-toggle {
+  margin-left: 15px;
+  background: none;
+  border: none;
+  font-size: 22px;
+  cursor: pointer;
+  color: var(--text);
+}
+
+/* HERO IMAGE TETAP TERANG */
+.hero img {
+  filter: brightness(0.95);
+}

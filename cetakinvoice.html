@@ -1,77 +1,71 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SEDULUR FOTO COPY</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Invoice | Sedulur Foto Copy</title>
 
-  <link rel="icon" type="image/png" href="img/loggo/sdlr.png">
-  <link rel="stylesheet" href="css/invoce.css">
+<link rel="icon" href="img/loggo/sdlr.png">
+<link rel="stylesheet" href="css/invoce.css">
 </head>
 <body>
 
-<!-- ================= NAVBAR ================= -->
+<!-- ===== NAVBAR ===== -->
 <header>
   <div class="logo">
-    <img src="img/loggo/sdlr.png" alt="Sedulur Fotocopy Logo">
+    <img src="img/loggo/sdlr.png">
   </div>
-
   <nav>
     <ul>
       <li><a href="index.html">Home</a></li>
       <li><a href="cetakfoto.html">Cetak Foto</a></li>
       <li><a href="cetakinvoice.html">Invoice</a></li>
-      <li><a href="#">About Us</a></li>
       <li><a href="#" onclick="logout()">Logout</a></li>
     </ul>
   </nav>
-
-  <div class="search-box">
-    <input type="text" placeholder="Cari Produk Disini">
-    <button>🔍</button>
-  </div>
 </header>
 
-<!-- ================= HEADER INVOICE ================= -->
+<!-- ===== HEADER INVOICE ===== -->
 <div class="header" id="notaArea">
   <img src="img/loggo/logo1.png" class="logo">
   <div class="info">
     <small>Tanggal: <span id="tgl"></span></small><br>
     <small>No Nota: <span id="noNota"></span></small><br>
-    <small>Nama: <span id="namaView">-</span></small><br>
+    <small>Pelanggan: <span id="namaView">-</span></small><br>
     <small>Admin: <span id="adminName">-</span></small>
   </div>
 </div>
 
-<!-- ================= INPUT NAMA ================= -->
-<div class="no-print" style="margin-bottom:10px">
+<!-- ===== INPUT ===== -->
+<div class="no-print">
   <input type="text" id="namaPelanggan" placeholder="Nama Pelanggan">
 </div>
 
-<!-- ================= INPUT ITEM ================= -->
 <div class="select-area no-print">
-  <select id="layanan">
-    <option data-type="hp" data-bulat="true">Print Hitam Putih</option>
-    <option data-type="warna">Print Warna</option>
-    <option data-type="warnastandar">Print Standar</option>
-    <option data-type="fullcolor">Full Color</option>
+<select id="layanan">
+  <!-- PRINT -->
+  <option value="300" data-type="print">Print Hitam Putih</option>
+  <option value="500" data-type="print">Print Warna</option>
+  <option value="500" data-type="print">HP Bolak Balik</option>
 
-    <option value="500">Hitam Putih Bolak-Balik</option>
-    <option value="4000">Full A4 HVS</option>
-    <option value="8000">A3 Buffalo</option>
-    <option value="10000">A3 Glossy</option>
-    <option value="40000">HardCover</option>
-    <option value="4000">Jilid Mika</option>
-    <option value="15000">Softcover</option>
-    <option value="18000">Softcover Sambung</option>
-  </select>
+  <!-- KERTAS -->
+  <option value="4000" data-type="print">A4 HVS</option>
+  <option value="8000" data-type="print">A3 Buffalo</option>
+  <option value="10000" data-type="print">A3 Glossy</option>
 
-  <input type="number" id="lembar" min="1" value="1">
-  <input type="number" id="qty" min="1" value="1">
-  <button onclick="tambah()">Tambah</button>
+  <!-- JILID -->
+  <option value="40000" data-type="jilid">Hardcover</option>
+  <option value="4000" data-type="jilid">Jilid Mika</option>
+  <option value="15000" data-type="jilid">Softcover</option>
+  <option value="18000" data-type="jilid">Softcover Sambung</option>
+</select>
+
+<input type="number" id="lembar" value="1" min="1">
+<input type="number" id="qty" value="1" min="1">
+<button onclick="tambah()">Tambah</button>
 </div>
 
-<!-- ================= TABLE ================= -->
+<!-- ===== TABLE ===== -->
 <table>
 <thead>
 <tr>
@@ -86,56 +80,96 @@
 <tbody id="list"></tbody>
 </table>
 
-<!-- ================= TOTAL ================= -->
+<!-- ===== TOTAL ===== -->
 <div class="total">Total: Rp <span id="totalView">0</span></div>
+<div class="total">Diskon: Rp <span id="discountView">0</span></div>
 <div class="grand-total">Grand Total: Rp <span id="grandTotalView">0</span></div>
 
-<!-- ================= BUTTON ================= -->
-<div class="no-print" style="margin-top:15px;display:flex;gap:10px">
-  <button onclick="window.print()">Print</button>
-  <button onclick="downloadPDF()">PDF</button>
-  <button onclick="sendWA()">WhatsApp</button>
-  <button onclick="location.reload()">Reset</button>
+<!-- ===== DISKON ADMIN ===== -->
+<div class="no-print">
+<button onclick="toggleDiscount()">Aktifkan Diskon Admin</button>
+<small id="discountStatus">Diskon nonaktif</small>
+</div>
+
+<!-- ===== BUTTON ===== -->
+<div class="no-print" style="display:flex;gap:10px">
+<button onclick="window.print()">Print</button>
+<button onclick="downloadPDF()">PDF</button>
+<button onclick="sendWA()">WhatsApp</button>
+<button onclick="location.reload()">Reset</button>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
-<!-- ================= SCRIPT INVOICE ================= -->
+<!-- ===== SCRIPT ===== -->
 <script>
-const tgl = document.getElementById("tgl");
-const noNota = document.getElementById("noNota");
-const namaView = document.getElementById("namaView");
-const namaPelanggan = document.getElementById("namaPelanggan");
+const layanan = document.getElementById("layanan");
+const lembarInput = document.getElementById("lembar");
+const qtyInput = document.getElementById("qty");
 const list = document.getElementById("list");
 const totalView = document.getElementById("totalView");
+const discountView = document.getElementById("discountView");
 const grandTotalView = document.getElementById("grandTotalView");
+const namaView = document.getElementById("namaView");
+const namaPelanggan = document.getElementById("namaPelanggan");
+const discountStatus = document.getElementById("discountStatus");
 
-noNota.innerText = "INV-" + Date.now();
+let discountEnabled = false;
+const ADMIN_PASSWORD = "1234";
+
+document.getElementById("noNota").innerText = "INV-" + Date.now();
 const d = new Date();
-tgl.innerText = `${d.getDate()}-${d.getMonth()+1}-${d.getFullYear()}`;
+document.getElementById("tgl").innerText =
+`${d.getDate()}-${d.getMonth()+1}-${d.getFullYear()}`;
 
-namaPelanggan.addEventListener("input", () => {
-  namaView.innerText = namaPelanggan.value || "-";
-});
+namaPelanggan.oninput = () =>
+namaView.innerText = namaPelanggan.value || "-";
+
+layanan.onchange = () => {
+  const type = layanan.selectedOptions[0].dataset.type;
+  if(type === "jilid"){
+    lembarInput.value = 1;
+    lembarInput.disabled = true;
+  } else {
+    lembarInput.disabled = false;
+  }
+};
+
+function toggleDiscount(){
+  if(prompt("Password admin:") !== ADMIN_PASSWORD){
+    alert("Password salah");
+    return;
+  }
+  discountEnabled = !discountEnabled;
+  discountStatus.innerText = discountEnabled
+    ? "Diskon 7% AKTIF (≥200rb)"
+    : "Diskon nonaktif";
+  hitung();
+}
 
 function tambah(){
-  const layanan = document.getElementById("layanan");
-  const lembar = parseInt(document.getElementById("lembar").value);
-  const qty = parseInt(document.getElementById("qty").value);
-  const opt = layanan.options[layanan.selectedIndex];
-  const harga = parseInt(opt.value) || 300;
+  const opt = layanan.selectedOptions[0];
+  const harga = +opt.value;
+  const type = opt.dataset.type;
+  const qty = +qtyInput.value;
+  const lembar = type === "jilid" ? 1 : +lembarInput.value;
 
-  const sub = harga * lembar * qty;
+  const sub = type === "jilid"
+    ? harga * qty
+    : harga * lembar * qty;
+
   const tr = document.createElement("tr");
   tr.dataset.sub = sub;
 
   tr.innerHTML = `
     <td>${opt.text}</td>
     <td class="print-only">${harga.toLocaleString()}</td>
-    <td>${lembar}</td>
+    <td>${type === "jilid" ? "-" : lembar}</td>
     <td>${qty}</td>
     <td class="print-only">${sub.toLocaleString()}</td>
-    <td class="no-print"><span onclick="this.closest('tr').remove(); hitung()">Hapus</span></td>
+    <td class="no-print">
+      <span onclick="this.closest('tr').remove(); hitung()">Hapus</span>
+    </td>
   `;
   list.appendChild(tr);
   hitung();
@@ -144,10 +178,17 @@ function tambah(){
 function hitung(){
   let total = 0;
   document.querySelectorAll("#list tr").forEach(tr=>{
-    total += parseInt(tr.dataset.sub);
+    total += +tr.dataset.sub;
   });
+
+  let discount = 0;
+  if(discountEnabled && total >= 200000){
+    discount = Math.floor(total * 0.07);
+  }
+
   totalView.innerText = total.toLocaleString();
-  grandTotalView.innerText = total.toLocaleString();
+  discountView.innerText = discount.toLocaleString();
+  grandTotalView.innerText = (total - discount).toLocaleString();
 }
 
 function downloadPDF(){
@@ -156,44 +197,32 @@ function downloadPDF(){
 
 function sendWA(){
   window.open(`https://wa.me/6288980484642?text=${encodeURIComponent(
-    "Nota Sedulur Fotocopy\nAdmin: "+document.getElementById("adminName").innerText+
-    "\nNama: "+namaView.innerText+
-    "\nTotal: Rp "+grandTotalView.innerText
+    "Invoice Sedulur Fotocopy\n" +
+    "Admin: " + document.getElementById("adminName").innerText +
+    "\nPelanggan: " + namaView.innerText +
+    "\nGrand Total: Rp " + grandTotalView.innerText
   )}`);
 }
 </script>
 
-<!-- ================= FIREBASE AUTH ================= -->
+<!-- ===== FIREBASE ===== -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
-const firebaseConfig = {
+const app = initializeApp({
   apiKey: "AIzaSyCzk9nMICnFTHaF8_xvGoWuyUuKiP-dS1Y",
   authDomain: "sedulur-fotocopy-unnes.firebaseapp.com",
-  projectId: "sedulur-fotocopy-unnes",
-  storageBucket: "sedulur-fotocopy-unnes.firebasestorage.app",
-  messagingSenderId: "899088194781",
-  appId: "1:899088194781:web:597f1fd8766e9b71dd8f34"
-};
-
-const app = initializeApp(firebaseConfig);
+  projectId: "sedulur-fotocopy-unnes"
+});
 const auth = getAuth(app);
 
-onAuthStateChanged(auth, (user)=>{
-  if(user){
-    document.getElementById("adminName").innerText =
-      user.displayName || user.email;
-  }else{
-    window.location.href = "login.html";
-  }
+onAuthStateChanged(auth, user=>{
+  if(!user) location.href="login.html";
+  else document.getElementById("adminName").innerText = user.email;
 });
 
-window.logout = function(){
-  signOut(auth).then(()=>{
-    window.location.href = "login.html";
-  });
-}
+window.logout = ()=>signOut(auth).then(()=>location.href="login.html");
 </script>
 
 </body>
