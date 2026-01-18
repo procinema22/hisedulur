@@ -28,6 +28,7 @@
       <li><a href="cetakfoto.html">Cetak Foto</a></li>
       <li><a href="cetakinvoice.html">Invoice</a></li>
       <li><a href="#">About Us</a></li>
+      <li><a href="#" onclick="logout()">Logout</a></li>
     </ul>
   </nav>
 
@@ -104,6 +105,29 @@
 
 <!-- JS -->
 <script src="js/detail.js"></script>
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyCzk9nMICnFTHaF8_xvGoWuyUuKiP-dS1Y",
+    authDomain: "sedulur-fotocopy-unnes.firebaseapp.com",
+    projectId: "sedulur-fotocopy-unnes",
+    storageBucket: "sedulur-fotocopy-unnes.firebasestorage.app",
+    messagingSenderId: "899088194781",
+    appId: "1:899088194781:web:597f1fd8766e9b71dd8f34"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+
+  window.logout = function () {
+    signOut(auth).then(() => {
+      window.location.href = "login.html";
+    });
+  };
+</script>
+
 
 </body>
 </html>

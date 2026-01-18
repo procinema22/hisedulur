@@ -1,0 +1,117 @@
+* {
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+  }
+  
+  body {
+    margin: 0;
+    height: 100vh;
+    background: linear-gradient(135deg, #1d2671, #c33764);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .auth-wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+  
+  .login-box {
+    background: #fff;
+    padding: 35px 30px;
+    width: 100%;
+    max-width: 380px;
+    border-radius: 14px;
+    box-shadow: 0 15px 40px rgba(0,0,0,.25);
+    animation: fadeIn .6s ease;
+  }
+  
+  @keyframes fadeIn {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+  
+  .login-box h2 {
+    margin: 0;
+    text-align: center;
+  }
+  
+  .subtitle {
+    text-align: center;
+    color: #777;
+    font-size: 14px;
+    margin-bottom: 25px;
+  }
+  
+  .input-group {
+    position: relative;
+    margin-bottom: 22px;
+  }
+  
+  .input-group input {
+    width: 100%;
+    padding: 12px 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    outline: none;
+    font-size: 14px;
+  }
+  
+  .input-group label {
+    position: absolute;
+    top: 50%;
+    left: 10px;
+    color: #999;
+    font-size: 13px;
+    transform: translateY(-50%);
+    pointer-events: none;
+    transition: .3s;
+    background: #fff;
+    padding: 0 5px;
+  }
+  
+  .input-group input:focus + label,
+  .input-group input:valid + label {
+    top: -6px;
+    font-size: 11px;
+    color: #c33764;
+  }
+  
+  button {
+    width: 100%;
+    padding: 12px;
+    background: linear-gradient(135deg, #c33764, #1d2671);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: .3s;
+  }
+  
+  button:hover {
+    opacity: .9;
+    transform: translateY(-1px);
+  }
+  
+  #toggleText {
+    margin-top: 15px;
+    text-align: center;
+    font-size: 13px;
+  }
+  
+  #toggleText a {
+    color: #c33764;
+    text-decoration: none;
+    font-weight: 600;
+  }
+  
+  .error {
+    text-align: center;
+    margin-top: 10px;
+    color: red;
+    font-size: 13px;
+  }
+  

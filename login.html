@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Login | Sedulur Foto Copy</title>
+  <link rel="stylesheet" href="css/login.css">
+</head>
+<body>
+
+<div class="auth-wrapper">
+  <div class="login-box">
+    <h2 id="formTitle">Login</h2>
+    <p class="subtitle">Sedulur Foto Copy</p>
+
+    <form id="authForm">
+      <div class="input-group">
+        <input type="email" id="email" required>
+        <label>Email</label>
+      </div>
+
+      <div class="input-group">
+        <input type="password" id="password" required>
+        <label>Password</label>
+      </div>
+
+      <button type="submit" id="submitBtn">Masuk</button>
+    </form>
+
+    <p id="toggleText">
+      Belum punya akun?
+      <a href="#" id="toggleMode">Daftar</a>
+    </p>
+
+    <p id="error" class="error"></p>
+  </div>
+</div>
+
+<!-- === SCRIPT FIREBASE (TETAP) === -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  import {
+    getAuth,
+    signInWithEmailAndPassword,
+    createUserWithEmailAndPassword
+  } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyCzk9nMICnFTHaF8_xvGoWuyUuKiP-dS1Y",
+    authDomain: "sedulur-fotocopy-unnes.firebaseapp.com",
+    projectId: "sedulur-fotocopy-unnes",
+    storageBucket: "sedulur-fotocopy-unnes.firebasestorage.app",
+    messagingSenderId: "899088194781",
+    appId: "1:899088194781:web:597f1fd8766e9b71dd8f34"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+
+  let isLogin = true;
+
+  function bindToggle() {
+    document.getElementById("toggleMode").addEventListener("click", (e) => {
+      e.preventDefault();
+      isLogin = !isLogin;
+
+      document.getElementById("formTitle").innerText = isLogin ? "Login" : "Register";
+      document.getElementById("submitBtn").innerText = isLogin ? "Masuk" : "Daftar";
+      document.getElementById("toggleText").innerHTML = isLogin
+        ? 'Belum punya akun? <a href="#" id="toggleMode">Daftar</a>'
+        : 'Sudah punya akun? <a href="#" id="toggleMode">Login</a>';
+
+      document.getElementById("error").innerText = "";
+      bindToggle();
+    });
+  }
+  bindToggle();
+
+  document.getElementById("authForm").addEventListener("submit", (e) => {
+  e.preventDefault();
+
+  const emailVal = document.getElementById("email").value;
+  const passwordVal = document.getElementById("password").value;
+
+  if (isLogin) {
+    signInWithEmailAndPassword(auth, emailVal, passwordVal)
+      .then(() => {
+        window.location.href = "index.html";
+      })
+      .catch(err => {
+        document.getElementById("error").innerText = err.message;
+      });
+  } else {
+    createUserWithEmailAndPassword(auth, emailVal, passwordVal)
+      .then(() => {
+        alert("Register berhasil, silakan login");
+        location.reload();
+      })
+      .catch(err => {
+        document.getElementById("error").innerText = err.message;
+      });
+  }
+});
+
+</script>
+
+</body>
+</html>

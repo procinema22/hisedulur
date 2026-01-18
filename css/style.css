@@ -220,3 +220,36 @@ nav a:hover {
   padding:8px;
   text-align:left;
 }
+.login-box {
+  width: 320px;
+  margin: 120px auto;
+  padding: 25px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.login-box h2 {
+  text-align: center;
+}
+
+.login-box input {
+  width: 100%;
+  padding: 10px;
+  margin: 8px 0;
+}
+
+.login-box button {
+  width: 100%;
+  padding: 10px;
+  background: #000;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+
+#error {
+  color: red;
+  text-align: center;
+  margin-top: 8px;
+}
