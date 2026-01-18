@@ -97,7 +97,7 @@
     if (isLogin) {
       signInWithEmailAndPassword(auth, email, password)
         .then(() => {
-          location.href = "index.html";
+          location.href = "home.html";
         })
         .catch(err => {
           document.getElementById("error").innerText = err.message;

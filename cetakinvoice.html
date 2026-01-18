@@ -218,7 +218,7 @@ const app = initializeApp({
 const auth = getAuth(app);
 
 onAuthStateChanged(auth, user=>{
-  if(!user) location.href="login.html";
+  if(!user) location.href="index.html";
   else document.getElementById("adminName").innerText = user.email;
 });
 
